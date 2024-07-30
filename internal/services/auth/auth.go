@@ -42,6 +42,7 @@ var (
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrInvalidAppId       = errors.New("invalid app id")
 	ErrUserExist          = errors.New("user already exists")
+	ErrUserNotFound       = errors.New("user not found")
 )
 
 func New(
@@ -134,8 +135,8 @@ func (a *Auth) RegisterNewUser(
 
 	id, err := a.usrSaver.SaveUser(ctx, email, passHash)
 	if err != nil {
-		if errors.Is(err, storage.ErrUserExist) {
-			log.Warn("app not found")
+		if errors.Is(err, storage.ErrUserExists) {
+			log.Warn("user already exists")
 			return 0, fmt.Errorf("%s: %w", op, ErrUserExist)
 		}
 
